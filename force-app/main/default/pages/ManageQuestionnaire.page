@@ -6,61 +6,72 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     </head>
-    <body class="bg-light container">
-        <div class="card border-light bg-light">
-            <apex:form>
-                <div class="form-group row">
-                    <label class="col-lg-4 col-form-label">Questionnaire name</label>
-                    <div class="col-lg-8">
-                        <apex:inputField styleClass="form-control" value="{!questionnaireToManage.Name}"></apex:inputField>
+    <body class="bg-light" style="padding:20px">
+        <apex:form styleClass="container">
+            <div class="card">
+                <div class="form-group card-header row mx-0">
+                    <h3 class="col-auto">Questionnaire name</h3>
+                    <div class="col-7">
+                        <apex:inputField styleClass="form-control" value="{!questionnaireToManage.Name}"/>
                     </div>
-                </div>
-                <div class="form-row">
-                    <apex:commandLink styleClass="btn btn-outline-primary" value="Add question" action="{!addQuestion}" reRender="questionnaireQuestionAnswer"/>
-                </div>
-                
-                <apex:outputPanel id="questionnaireQuestionAnswer">
-                    <apex:repeat value="{!questionAnswerList}" var="questionAnswer">
-                        <div class="row">
-                            <div class="form-group row col-lg-4">
-                                <label class="col-form-label">Question</label>
-                                <apex:inputField styleClass="form-control" value="{!questionAnswer.question.QuestionLabel__c}"></apex:inputField>
+                    <div class="col-auto">
+                        <apex:commandButton styleClass="btn btn-primary" value="Add question" action="{!addQuestion}" reRender="questionnaireQuestionAnswer"/>
+                    </div>
+                </div>    
+                <div style="form-group card-body">
+                    <apex:outputPanel id="questionnaireQuestionAnswer">
+                        <apex:repeat value="{!questionAnswerList}" var="questionAnswer">
+                            <div class="row" style="padding:15px;">
+                                <div class="form-group col-auto col-lg-auto col-xl-4 form-inline">
+                                    <div>Question</div>&nbsp;
+                                    <div class="col-9">
+                                        <apex:inputField styleClass="form-control" value="{!questionAnswer.question.QuestionLabel__c}" style="width:100%;"/>    
+                                    </div>                                
+                                </div>
+                                <div class="form-group col-auto col-lg-auto form-inline">
+                                    <label>Order</label>&nbsp;&nbsp;
+                                    <apex:inputField styleClass="form-control" value="{!questionAnswer.question.Order__c}" style="width:80px"/>
+                                </div>
+                                <div class="form-group col-auto form-inline">
+                                    <label>Type</label>&nbsp;&nbsp;
+                                    <apex:inputField styleClass="form-control" value="{!questionAnswer.question.QuestionType__c}"/>
+                                </div>
+                                <div class="form-group col-auto">
+                                    <apex:commandButton styleClass="btn btn-outline-primary" value="Add answer" action="{!addAnswer}" reRender="questionnaireQuestionAnswer">
+                                        <apex:param name="addAnswerIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>
+                                    </apex:commandButton>&nbsp;&nbsp;
+                                    <apex:commandButton styleClass="btn btn-outline-danger" value="Remove question" action="{!removeQuestion}" reRender="questionnaireQuestionAnswer">
+                                        <apex:param name="removeQuestionIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>
+                                    </apex:commandButton>
+                                </div>
                             </div>
-                            <div class="form-group row col-lg-4">
-                                <label class="col-form-label">Order</label>
-                                <apex:inputField styleClass="form-control" value="{!questionAnswer.question.Order__c}"></apex:inputField>
-                            </div>
-                            <div class="form-group row col-lg-4">
-                                <label class="col-form-label">Type</label>
-                                <apex:inputField styleClass="form-control" value="{!questionAnswer.question.QuestionType__c}"></apex:inputField>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <apex:commandLink styleClass="btn btn-outline-primary" value="Add answer" action="{!addAnswer}" reRender="questionnaireQuestionAnswer">
-                                <apex:param name="addAnswerIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>
-                            </apex:commandLink>
-                            <apex:commandLink styleClass="btn btn-outline-danger" value="Remove question" action="{!removeQuestion}" reRender="questionnaireQuestionAnswer">
-                                <apex:param name="removeQuestionIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>
-                            </apex:commandLink>
-                        </div>
-                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapper" id="answerpanel">
-                            <div class="form-row">
-                                <apex:inputField styleClass="form-control" value="{!answerIndexWrapper.answer.AnswerLabel__c}"></apex:inputField>
-                                <apex:commandLink styleClass="btn btn-outline-danger" value="Remove answer" action="{!removeAnswer}" reRender="questionnaireQuestionAnswer">
-                                    <apex:param name="removeAnswerQuestionIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>                                    
-                                    <apex:param name="removeAnswerIndex" assignTo="{!currentAnswerIndex}" value="{!answerIndexWrapper.index}"/>
-                                </apex:commandLink>
-                            </div>
+                            
+                            <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapper" id="answerpanel">
+                                <div class="row">
+                                    <div class="col-1"/>
+                                    <div class="col-7">                                                                    
+                                        <apex:inputField styleClass="form-control" value="{!answerIndexWrapper.answer.AnswerLabel__c}"/>
+                                    </div>    
+                                    <div class="col-auto">
+                                        <apex:commandButton styleClass="btn btn-outline-danger" value="Remove answer" action="{!removeAnswer}" reRender="questionnaireQuestionAnswer">
+                                            <apex:param name="removeAnswerQuestionIndex" assignTo="{!currentQuestionIndex}" value="{!questionAnswer.index}"/>                                    
+                                            <apex:param name="removeAnswerIndex" assignTo="{!currentAnswerIndex}" value="{!answerIndexWrapper.index}"/>
+                                        </apex:commandButton>
+                                        <br/><br/>
+                                    </div>
+                                </div>
+                            </apex:repeat>
                         </apex:repeat>
-                    </apex:repeat>
-                </apex:outputPanel>
-                <div class="form-row">
-                    <apex:commandButton styleClass="btn btn-outline-success" value="Save questionnaire" action="{!saveQuestionnaire}"/>
+                    </apex:outputPanel>
+                </div>   
+                <div align="right">
+                    <apex:commandButton styleClass="btn btn-success" value="Save questionnaire" action="{!saveQuestionnaire}"/>
                 </div>
-            </apex:form>
-        </div>
+            </div>
+            
+        </apex:form>   
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    </body>
-</apex:page>
+        </body>
+        </apex:page>
