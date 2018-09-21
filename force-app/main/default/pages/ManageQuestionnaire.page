@@ -9,7 +9,7 @@
     <body class="bg-light" style="padding:20px">
         <apex:form styleClass="container">
             <div class="card">
-                <div class="form-group card-header row mx-0">
+                <div class="form-group card-header row mx-0 my-3" style="background-color:white">
                     <h3 class="col-auto">Questionnaire name</h3>
                     <div class="col-7">
                         <apex:inputField styleClass="form-control" value="{!questionnaireToManage.Name}"/>
@@ -61,6 +61,7 @@
                                     </div>
                                 </div>
                             </apex:repeat>
+                            <hr/>
                         </apex:repeat>
                     </apex:outputPanel>
                 </div>   
