@@ -23,4 +23,20 @@ public class QuestionnaireUtility {
         }
         return answerChosen;
     }
+
+    public static List<System.SelectOption> generateAllQuestionnaireSelectOption() {
+        List<Questionnaire__c> questionnaireList = [SELECT Id, Name FROM Questionnaire__c];
+        List<System.SelectOption> questionnaireChoices = new List<SelectOption>();
+        questionnaireChoices.add(new SelectOption('-1', '--- Select ---'));
+        for (Questionnaire__c questionnaireItem : questionnaireList)
+            questionnaireChoices.add(new SelectOption(questionnaireItem.Id, questionnaireItem.Name));
+        return questionnaireChoices;
+    }
+
+    public static Pagereference redirectSamePageWithQuestionnaireId(String endpoint, String questionnaireId) {
+        PageReference currentPage = new PageReference(endpoint);
+        currentPage.getparameters().put('questionnaireId', questionnaireId);
+        currentPage.setRedirect(true);
+        return currentPage;
+    }
 }

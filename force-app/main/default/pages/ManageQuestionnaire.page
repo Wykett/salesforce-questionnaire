@@ -8,6 +8,13 @@
     </head>
     <body class="bg-light" style="padding:20px">
         <apex:form styleClass="container">
+            <apex:outputText rendered="{!IF(questionnaireId == null, true, false)}">
+                Choose questionnaire
+                <apex:selectList value="{!questionnaireId}"  size="1" styleClass="form-control h40px" >
+                    <apex:selectOptions value="{!questionnaireChoices}" />
+                    <apex:actionSupport event="onchange" action="{!showQuestionnaire}" reRender="tabPanel,noDataPanel" status="loading"/>
+                </apex:selectList>
+            </apex:outputText>
             <div class="card">
                 <div class="form-group card-header row mx-0 my-3" style="background-color:white">
                     <h3 class="col-auto">Questionnaire name</h3>

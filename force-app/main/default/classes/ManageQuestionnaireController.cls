@@ -6,6 +6,7 @@ public class ManageQuestionnaireController {
     public Integer currentQuestionIndex {get; set;}
     public Integer currentAnswerIndex {get; set;}
     public ID questionnaireId {get; set;}
+    public List<System.SelectOption> questionnaireChoices {get; set;}
     
     public ManageQuestionnaireController() {
         questionnaireId = apexpages.currentpage().getparameters().get('questionnaireId');
@@ -14,6 +15,7 @@ public class ManageQuestionnaireController {
             questionnaireToManage = [SELECT Name FROM Questionnaire__c WHERE Id = :questionnaireId];
             questionAnswerList = QuestionnaireUtility.findQuestionAnswerFromQuestionnaireId(questionnaireId);
         } else {
+            questionnaireChoices = QuestionnaireUtility.generateAllQuestionnaireSelectOption();
             questionnaireToManage = new Questionnaire__c();
         }
     }
@@ -71,9 +73,10 @@ public class ManageQuestionnaireController {
         if (questionToDeleteList != null)
             database.delete(questionToDeleteList);
         
-        PageReference currentPage = new PageReference('/apex/ManageQuestionnaire');
-        currentPage.getparameters().put('questionnaireId', questionnaireToManage.Id);
-        currentPage.setRedirect(true);
-        return currentPage;
+        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
+    }
+
+    public Pagereference showQuestionnaire() {
+        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
     }
 }

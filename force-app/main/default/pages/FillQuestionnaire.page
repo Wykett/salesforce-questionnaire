@@ -6,8 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     </head>
-    <body>
-        <apex:form>
+    <body class="bg-light" style="padding:20px">
+        <apex:form styleClass="container">
+            <apex:outputText rendered="{!IF(questionnaireId == null, true, false)}">
+                Choose questionnaire
+                <apex:selectList value="{!questionnaireId}"  size="1" styleClass="form-control h40px" >
+                    <apex:selectOptions value="{!questionnaireChoices}" />
+                    <apex:actionSupport event="onchange" action="{!showQuestionnaire}" reRender="tabPanel,noDataPanel" status="loading"/>
+                </apex:selectList>
+            </apex:outputText>
             <div class="form-row">
                 <apex:outputfield value="{!questionnaireToFill.Name}"></apex:outputfield>
             </div>
@@ -43,7 +50,7 @@
                 </apex:repeat>
             </apex:outputPanel>
             <div class="form-row">
-                    <apex:commandButton value="Save" action="{!saveQuestionnaireFilled}"/>
+                <apex:commandButton value="Save" action="{!saveQuestionnaireFilled}" rendered="{!IF(questionnaireId == null, false, true)}" />
             </div>
         </apex:form>
     </body>

@@ -2,8 +2,9 @@ public class FillQuestionnaireController {
     public Questionnaire__c questionnaireToFill {get; set;}
     public List<QuestionnaireQuestionAnswerWrapper> questionAnswerList {get; set;}
     public Integer addAnswerIndex {get; set;}
-    public ID questionnaireId {get; set;}
+    public Id questionnaireId {get; set;}
     public Map<String, Object> answerChosen {get; set;}
+    public List<System.SelectOption> questionnaireChoices {get; set;}
     
     public FillQuestionnaireController() {
         questionnaireId = apexpages.currentpage().getparameters().get('questionnaireId');
@@ -13,14 +14,17 @@ public class FillQuestionnaireController {
             questionnaireToFill = [SELECT Name FROM Questionnaire__c WHERE Id = :questionnaireId];
             questionAnswerList = QuestionnaireUtility.findQuestionAnswerFromQuestionnaireId(questionnaireId);
             answerChosen = QuestionnaireUtility.createMapWithAnswers(questionAnswerList);
+        } else {
+            questionnaireChoices = QuestionnaireUtility.generateAllQuestionnaireSelectOption();
         }
     }
 
     public Pagereference saveQuestionnaireFilled() {
         System.debug('PRINT answerChosen=' + answerChosen);
-        PageReference currentPage = new PageReference('/apex/FillQuestionnaire');
-        currentPage.getparameters().put('questionnaireId', questionnaireId);
-        currentPage.setRedirect(true);
-        return currentPage;
+        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/FillQuestionnaire', questionnaireId);
+    }
+
+    public Pagereference showQuestionnaire() {
+        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/FillQuestionnaire', questionnaireId);
     }
 }
