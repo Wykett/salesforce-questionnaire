@@ -4,6 +4,7 @@
         <!-- Required meta tags -->
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     </head>
     <body class="bg-light" style="padding:20px">
@@ -40,7 +41,9 @@
                         </apex:outputPanel>
                         
                         <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Radiobutton', true, false)}">
-                            
+                            <input type="radio" value="true" name="{!questionAnswer.question.Id}" onclick="changeValue(this, '{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}');" />
+                            <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
+                            <apex:inputHidden value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" html-data-id="{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}" />
                         </apex:outputPanel>
                         
                         <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Star', true, false)}">
@@ -53,5 +56,13 @@
                 <apex:commandButton value="Save" action="{!saveQuestionnaireFilled}" rendered="{!IF(questionnaireId == null, false, true)}" />
             </div>
         </apex:form>
+
+        <script>
+            function changeValue(input, textid) {
+                console.log('input=' + input);
+                console.log('textid=' + textid);
+                $('[data-id=' + textid + ']').val(input.value);
+            }
+        </script>
     </body>
 </apex:page>
