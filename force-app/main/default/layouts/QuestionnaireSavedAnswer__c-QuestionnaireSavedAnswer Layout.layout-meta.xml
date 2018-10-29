@@ -26,6 +26,10 @@
                 <behavior>Required</behavior>
                 <field>Customer__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>AnswerValue__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

@@ -15,6 +15,11 @@
         <field>QuestionnaireQuestion__c.Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>QuestionnaireSavedAnswer__c.AnswerValue__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>FieldProfile</label>
     <objectPermissions>
