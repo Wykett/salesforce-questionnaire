@@ -7,7 +7,7 @@
     <referenceTo>Customer__c</referenceTo>
     <relationshipLabel>QuestionnaireSavedAnswer</relationshipLabel>
     <relationshipName>QuestionnaireSavedAnswer</relationshipName>
-    <required>true</required>
+    <required>false</required>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>

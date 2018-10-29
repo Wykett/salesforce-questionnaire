@@ -9,7 +9,7 @@
     </head>
     <body class="bg-light" style="padding:20px">
         <apex:pageMessages Id="apexPageMessages" />
-        <apex:form styleClass="container">
+        <apex:form styleClass="container" id="questionnaireForm">
             <apex:outputText rendered="{!IF(questionnaireId == null, true, false)}">
                 Choose questionnaire
                 <apex:selectList value="{!questionnaireId}"  size="1" styleClass="form-control h40px" >
@@ -49,11 +49,13 @@
                     </apex:outputPanel>
 
                     <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Select', true, false)}">
-                        <apex:selectList value="{!temporarySelectedValue}" size="1">
-                            <apex:selectOptions value="{!questionSelectType[questionAnswer.question.Id]}" />
-                            <apex:actionSupport event="onchange" action="{!populateAnswers}" reRender="dummy">
-                            </apex:actionSupport>
-                        </apex:selectList>
+                        <apex:actionRegion>
+                            <apex:selectList value="{!temporarySelectedValue}" size="1" multiselect="false">
+                                <apex:selectOptions value="{!questionSelectType[questionAnswer.question.Id]}" />
+                                <apex:actionSupport event="onchange" action="{!populateAnswers}" reRender="dummy">
+                                </apex:actionSupport>
+                            </apex:selectList>
+                        </apex:actionRegion>
                     </apex:outputPanel>
                         
                     <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Star', true, false)}">

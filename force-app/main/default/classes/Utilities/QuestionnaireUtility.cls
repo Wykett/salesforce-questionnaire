@@ -1,4 +1,8 @@
 public class QuestionnaireUtility {
+    public static Questionnaire__c getQuestionnaireById(String questionnaireId) {
+        return [SELECT Name FROM Questionnaire__c WHERE Id = :questionnaireId];
+    }
+
     public static List<QuestionnaireQuestionAnswerWrapper> findQuestionAnswerFromQuestionnaireId(String questionnaireId) {
         List<QuestionnaireQuestionAnswerWrapper> questionAnswerList = new List<QuestionnaireQuestionAnswerWrapper>();
         List<QuestionnaireQuestion__c> questionList = [SELECT Id, QuestionType__c, Order__c, QuestionLabel__c, QuestionnaireMaster__c
@@ -15,6 +19,13 @@ public class QuestionnaireUtility {
             currentIndex++;
         }
         return questionAnswerList;
+    }
+
+    public static List<QuestionnaireAnswer__c> retrieveAnswerFromQuestionIdList(List<QuestionnaireQuestionAnswerWrapper> questionAnswerList) {
+        List<String> questionIdList = new List<String>();
+        for (QuestionnaireQuestionAnswerWrapper questionAnswerItem : questionAnswerList)
+            questionIdList.add(questionAnswerItem.question.Id);
+        return [SELECT AnswerLabel__c, QuestionnaireQuestion__c FROM QuestionnaireAnswer__c WHERE QuestionnaireQuestion__c in :questionIdList];
     }
 
     public static Map<String, Object> createMapWithAnswers(List<QuestionnaireQuestionAnswerWrapper> questionAnswerList) {
@@ -58,5 +69,12 @@ public class QuestionnaireUtility {
             }
         }
         return questionSelectType;
+    }
+
+    public static String findQuestionIdFromAnswerId(List<QuestionnaireAnswer__c> answerIdList, String answerId) {
+        for (QuestionnaireAnswer__c answerItem : answerIdList)
+            if (answerItem.Id == answerId)
+                return answerItem.QuestionnaireQuestion__c;
+        return '-1';
     }
 }
