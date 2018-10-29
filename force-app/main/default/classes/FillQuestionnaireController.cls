@@ -44,12 +44,7 @@ public class FillQuestionnaireController {
             if (answerChosen.get(answerId) != null && !String.isBlank(answerChosen.get(answerId).toString()) && answerChosen.get(answerId).toString() != 'false') {
                 QuestionnaireSavedAnswer__c savedAnswer = new QuestionnaireSavedAnswer__c();
                 savedAnswer.Questionnaire__c = questionnaireId;
-                System.debug('PRINT answerId=' + answerId);
-                String questionId = QuestionnaireUtility.findQuestionIdFromAnswerId(questionnaireAnswerList, answerId);
-                if (questionId == '-1') {
-                    System.debug('PRINT will bug soon...');
-                }
-                savedAnswer.QuestionnaireQuestion__c = questionId;
+                savedAnswer.QuestionnaireQuestion__c = QuestionnaireUtility.findQuestionIdFromAnswerId(questionnaireAnswerList, answerId);
                 savedAnswer.QuestionnaireAnswers__c = answerId;
                 savedAnswer.AnswerValue__c = answerChosen.get(answerId).toString();
                 savedAnswer.Customer__c = customerId;
@@ -68,7 +63,16 @@ public class FillQuestionnaireController {
     }
 
     public Pagereference populateAnswers() {
+        if (temporarySelectedValue == '-1')
+            return null;
+            
+        String questionId = QuestionnaireUtility.findQuestionIdFromAnswerId(questionnaireAnswerList, temporarySelectedValue);
+        for (QuestionnaireAnswer__c questionnaireAnswerItem : questionnaireAnswerList)
+            if (questionnaireAnswerItem.QuestionnaireQuestion__c == questionId)
+                answerChosen.put(questionnaireAnswerItem.Id, false);
+
         System.debug('PRINT temporarySelectedValue=' + temporarySelectedValue);
+        
         answerChosen.put(temporarySelectedValue, true);
         return null;
     }
