@@ -44,4 +44,19 @@ public class QuestionnaireUtility {
         currentPage.setRedirect(true);
         return currentPage;
     }
+
+    public static Map<String, List<SelectOption>> generateSelectOptionMap(List<QuestionnaireQuestionAnswerWrapper> questionAnswerList) {
+        Map<String, List<SelectOption>> questionSelectType = new Map<String, List<SelectOption>>();
+        for (QuestionnaireQuestionAnswerWrapper questionAnswerItem : questionAnswerList) {
+            if (questionAnswerItem.question.QuestionType__c == 'Select') {
+                List<SelectOption> answerOptionList = new List<SelectOption>();
+                answerOptionList.add(new SelectOption('-1', '-- Select --'));
+                for (AnswerIndexWrapper answerIndexWrapperItem : questionAnswerItem.answerIndexWrapperList) {
+                    answerOptionList.add(new SelectOption(answerIndexWrapperItem.answer.Id, answerIndexWrapperItem.answer.AnswerLabel__c));
+                }
+                questionSelectType.put(questionAnswerItem.question.Id, answerOptionList);
+            }
+        }
+        return questionSelectType;
+    }
 }

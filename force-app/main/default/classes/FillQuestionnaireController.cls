@@ -16,15 +16,7 @@ public class FillQuestionnaireController {
         if (questionnaireId != null) {
             questionnaireToFill = [SELECT Name FROM Questionnaire__c WHERE Id = :questionnaireId];
             questionAnswerList = QuestionnaireUtility.findQuestionAnswerFromQuestionnaireId(questionnaireId);
-            for (QuestionnaireQuestionAnswerWrapper questionAnswerItem : questionAnswerList) {
-                if (questionAnswerItem.question.QuestionType__c == 'Select') {
-                    List<SelectOption> answerOptionList = new List<SelectOption>();
-                    for (AnswerIndexWrapper answerIndexWrapperItem : questionAnswerItem.answerIndexWrapperList) {
-                        answerOptionList.add(new SelectOption(answerIndexWrapperItem.answer.Id, answerIndexWrapperItem.answer.AnswerLabel__c));
-                    }
-                    questionSelectType.put(questionAnswerItem.question.Id, answerOptionList);
-                }
-            }
+            questionSelectType = QuestionnaireUtility.generateSelectOptionMap(questionAnswerList);
             answerChosen = QuestionnaireUtility.createMapWithAnswers(questionAnswerList);
         } else {
             questionnaireChoices = QuestionnaireUtility.generateAllQuestionnaireSelectOption();
