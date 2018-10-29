@@ -1,7 +1,10 @@
 public class QuestionnaireUtility {
     public static List<QuestionnaireQuestionAnswerWrapper> findQuestionAnswerFromQuestionnaireId(String questionnaireId) {
         List<QuestionnaireQuestionAnswerWrapper> questionAnswerList = new List<QuestionnaireQuestionAnswerWrapper>();
-        List<QuestionnaireQuestion__c> questionList = [SELECT Id, QuestionType__c, Order__c, QuestionLabel__c, QuestionnaireMaster__c FROM QuestionnaireQuestion__c WHERE QuestionnaireMaster__c = :questionnaireId];
+        List<QuestionnaireQuestion__c> questionList = [SELECT Id, QuestionType__c, Order__c, QuestionLabel__c, QuestionnaireMaster__c
+                                                        FROM QuestionnaireQuestion__c 
+                                                        WHERE QuestionnaireMaster__c = :questionnaireId
+                                                        ORDER BY Order__c];
         Integer currentIndex = 0;
         for (QuestionnaireQuestion__c questionItem : questionList) {
             List<AnswerIndexWrapper> answerIndexWrapperList = new List<AnswerIndexWrapper>();
@@ -28,8 +31,10 @@ public class QuestionnaireUtility {
         List<Questionnaire__c> questionnaireList = [SELECT Id, Name FROM Questionnaire__c];
         List<System.SelectOption> questionnaireChoices = new List<SelectOption>();
         questionnaireChoices.add(new SelectOption('-1', '--- Select ---'));
-        for (Questionnaire__c questionnaireItem : questionnaireList)
-            questionnaireChoices.add(new SelectOption(questionnaireItem.Id, questionnaireItem.Name));
+        if (questionnaireList != null && questionnaireList.size() > 0)
+            for (Questionnaire__c questionnaireItem : questionnaireList)
+                questionnaireChoices.add(new SelectOption(questionnaireItem.Id, questionnaireItem.Name));
+
         return questionnaireChoices;
     }
 

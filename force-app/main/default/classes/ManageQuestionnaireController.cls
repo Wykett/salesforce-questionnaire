@@ -5,7 +5,7 @@ public class ManageQuestionnaireController {
     public List<QuestionnaireAnswer__c> answerToDeleteList {get; set;}
     public Integer currentQuestionIndex {get; set;}
     public Integer currentAnswerIndex {get; set;}
-    public ID questionnaireId {get; set;}
+    public String questionnaireId {get; set;}
     public List<System.SelectOption> questionnaireChoices {get; set;}
     
     public ManageQuestionnaireController() {
@@ -20,9 +20,11 @@ public class ManageQuestionnaireController {
         }
     }
 
-    public Pagereference addQuestion() {
+    public void addQuestion() {
         questionAnswerList.add(new QuestionnaireQuestionAnswerWrapper(questionAnswerList.size()));
-        return null;
+        System.debug('PRINT Adding question...');
+        //System.debug('PRINT questionAnswerList.size=' + questionAnswerList.size());
+        return;
     }
 
     public Pagereference addAnswer() {
@@ -77,6 +79,8 @@ public class ManageQuestionnaireController {
     }
 
     public Pagereference showQuestionnaire() {
-        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
+        if (questionnaireId != '-1')
+            return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
+        return null;
     }
 }

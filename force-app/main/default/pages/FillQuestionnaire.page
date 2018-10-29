@@ -41,9 +41,9 @@
                         </apex:outputPanel>
                         
                         <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Radiobutton', true, false)}">
-                            <input type="radio" value="true" name="{!questionAnswer.question.Id}" onclick="changeValue(this, '{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}');" />
+                            <input type="radio" value="true" name="{!questionAnswer.question.Id}" onchange="changeValue(this, '{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}', '{!'RadioButtonValue' + questionAnswer.question.Id}');" />
                             <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
-                            <apex:inputHidden value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" html-data-id="{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}" />
+                            <apex:inputHidden value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" html-data-id="{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}" html-data-common-question="{!questionAnswer.question.Id}" />
                         </apex:outputPanel>
                         
                         <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Star', true, false)}">
@@ -58,9 +58,8 @@
         </apex:form>
 
         <script>
-            function changeValue(input, textid) {
-                console.log('input=' + input);
-                console.log('textid=' + textid);
+            function changeValue(input, textid, commonquestion) {
+                $('[data-common-question=' + commonquestion + ']').val(false);
                 $('[data-id=' + textid + ']').val(input.value);
             }
         </script>
