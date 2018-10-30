@@ -52,7 +52,7 @@
     <enableSearch>false</enableSearch>
     <enableSharing>true</enableSharing>
     <enableStreamingApi>true</enableStreamingApi>
-    <label>QuestionnaireAnswers</label>
+    <label>QuestionnaireAnswer</label>
     <nameField>
         <label>QuestionnaireAnswers Name</label>
         <trackHistory>false</trackHistory>

@@ -1,6 +1,6 @@
 <apex:page controller="QuestionnaireResultController" docType="html-5.0" cache="false"  applyHtmlTag="true" standardStylesheets="false" showHeader="false">
     <head>
-        <title>Fill questionnaire</title>
+        <title>Questionnaire result</title>
         <!-- Required meta tags -->
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>

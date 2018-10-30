@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     </head>
-    <body class="bg-light" style="padding:20px">
+    <body class="bg-light" style="padding:20px" id="wholePage">
         <apex:pageMessages Id="apexPageMessages" />
         <apex:form styleClass="container">
             <apex:outputText rendered="{!IF(questionnaireId == null, true, false)}">
@@ -18,12 +18,15 @@
             </apex:outputText>
             <div class="card">
                 <div class="form-group card-header row mx-0 my-3" style="background-color:white">
-                    <h3 class="col-auto">Questionnaire name</h3>
-                    <div class="col-7">
+                    <h3 class="col-auto">Questionnaire</h3>
+                    <div class="col-5">
                         <apex:inputField styleClass="form-control" value="{!questionnaireToManage.Name}"/>
                     </div>
                     <div class="col-auto">
                         <apex:commandButton styleClass="btn btn-primary" value="Add question" action="{!addQuestion}" reRender="questionnaireQuestionAnswer, apexPageMessages"/>
+                    </div>
+                    <div class="col-auto">
+                        <apex:commandButton styleClass="btn btn-danger" value="Delete questionnaire" onclick="return confirm('You will delete the questionnaire, including all answers. Do you confirm?');" action="{!deleteQuestionnaire}"/>
                     </div>
                 </div>    
                 <div style="form-group card-body">

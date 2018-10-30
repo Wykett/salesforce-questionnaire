@@ -22,8 +22,6 @@ public class ManageQuestionnaireController {
 
     public void addQuestion() {
         questionAnswerList.add(new QuestionnaireQuestionAnswerWrapper(questionAnswerList.size()));
-        System.debug('PRINT Adding question...');
-        //System.debug('PRINT questionAnswerList.size=' + questionAnswerList.size());
         return;
     }
 
@@ -38,9 +36,13 @@ public class ManageQuestionnaireController {
     }
 
     public Pagereference removeAnswer() {
-        QuestionnaireAnswer__c answerToDelete = questionAnswerList.get(currentQuestionIndex).answerIndexWrapperList.get(currentAnswerIndex).answer;
-        questionAnswerList.get(currentQuestionIndex).answerIndexWrapperList.remove(currentAnswerIndex);
-        database.delete(answerToDelete);
+        QuestionnaireQuestionAnswerWrapper currentQuestionAnswerWrapper = questionAnswerList.get(currentQuestionIndex);
+        AnswerIndexWrapper currentAnswerWrapper = currentQuestionAnswerWrapper.answerIndexWrapperList.get(currentAnswerIndex);
+        QuestionnaireAnswer__c answerToDelete = currentAnswerWrapper.answer;
+        currentQuestionAnswerWrapper.answerIndexWrapperList.remove(currentAnswerIndex);
+        if (answerToDelete.Id != null)
+            database.delete(answerToDelete);
+        
         return null;
     }
 
@@ -49,9 +51,14 @@ public class ManageQuestionnaireController {
             questionToDeleteList = new List<QuestionnaireQuestion__c>();
             answerToDeleteList = new List<QuestionnaireAnswer__c>();
         }
-        questionToDeleteList.add(questionAnswerList.get(currentQuestionIndex).question);
-        for (AnswerIndexWrapper answerIndexWrapperItem : questionAnswerList.get(currentQuestionIndex).answerIndexWrapperList)
-            answerToDeleteList.add(answerIndexWrapperItem.answer);
+        QuestionnaireQuestionAnswerWrapper currentQuestionAnswerWrapper = questionAnswerList.get(currentQuestionIndex);
+        QuestionnaireQuestion__c question = currentQuestionAnswerWrapper.question;
+        if (question.Id != null)
+            questionToDeleteList.add(question);
+
+        for (AnswerIndexWrapper answerIndexWrapperItem : currentQuestionAnswerWrapper.answerIndexWrapperList)
+            if (answerIndexWrapperItem.answer.Id != null)
+                answerToDeleteList.add(answerIndexWrapperItem.answer);
         questionAnswerList.remove(currentQuestionIndex);
 
         return null;
@@ -66,6 +73,7 @@ public class ManageQuestionnaireController {
             database.upsert(questionAnswerItem.question);
             for (AnswerIndexWrapper answerIndexWrapperItem : questionAnswerItem.answerIndexWrapperList) {
                 answerIndexWrapperItem.answer.QuestionnaireQuestion__c = questionAnswerItem.question.Id;
+                answerIndexWrapperItem.answer.Questionnaire__c = questionnaireToManage.Id;
                 answersToInsert.add(answerIndexWrapperItem.answer);
             }
         }
@@ -75,12 +83,33 @@ public class ManageQuestionnaireController {
         if (questionToDeleteList != null)
             database.delete(questionToDeleteList);
         
-        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
+        return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireToManage.Id);
     }
 
     public Pagereference showQuestionnaire() {
         if (questionnaireId != '-1')
             return QuestionnaireUtility.redirectSamePageWithQuestionnaireId('/apex/ManageQuestionnaire', questionnaireId);
         return null;
+    }
+
+    public Pagereference deleteQuestionnaire() {
+        if (questionnaireId == '-1')
+            return null;
+
+        try {
+            List<QuestionnaireSavedAnswer__c> savedAnswerList = [SELECT Id FROM QuestionnaireSavedAnswer__c WHERE Questionnaire__c = :questionnaireId];
+            Database.delete(savedAnswerList);
+
+            List<QuestionnaireAnswer__c> answerList = [SELECT Id FROM QuestionnaireAnswer__c WHERE Questionnaire__c = :questionnaireId];
+            Database.delete(answerList);
+
+            List<QuestionnaireQuestion__c> questionList = [SELECT Id FROM QuestionnaireQuestion__c WHERE QuestionnaireMaster__c = :questionnaireId];
+            Database.delete(questionList);
+
+            Database.delete(questionnaireId);
+        } catch (DmlException ex) {
+            PageUtility.addErrorMessageOnThePage(ex.getMessage());
+        }
+        return PageUtility.toPage('ManageQuestionnaire');
     }
 }
