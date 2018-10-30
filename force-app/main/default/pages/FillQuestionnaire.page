@@ -17,54 +17,74 @@
                     <apex:actionSupport event="onchange" action="{!showQuestionnaire}" reRender="tabPanel,noDataPanel" status="loading"/>
                 </apex:selectList>
             </apex:outputText>
-            <div class="form-row">
-                <apex:outputfield value="{!questionnaireToFill.Name}"></apex:outputfield>
-            </div>
-            <apex:outputPanel id="questionnaireQuestionAnswer">
-                <apex:repeat value="{!questionAnswerList}" var="questionAnswer">
-                    <div class="form-row">
-                        <apex:outputfield value="{!questionAnswer.question.Order__c}"></apex:outputfield>
-                        -
-                        <apex:outputfield value="{!questionAnswer.question.QuestionLabel__c}"></apex:outputfield>
+            <div class="card">
+                <div class="form-group card-header row mx-0 my-3" style="background-color:white">
+                    <div class="col-12">
+                        <apex:outputfield value="{!questionnaireToFill.Name}"/>
                     </div>
-                    <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Text', true, false)}">
-                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
-                            <apex:inputText value="{!answerChosen[answerIndexWrapperItem.answer.Id]}"></apex:inputText>
-                        </apex:repeat>
-                    </apex:outputPanel>
-                    
-                    <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Checkbox', true, false)}">
-                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
-                            <apex:inputCheckbox value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" />
-                            <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
-                        </apex:repeat>
-                    </apex:outputPanel>
-                    
-                    <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Radiobutton', true, false)}">
-                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
-                            <input type="radio" value="true" name="{!questionAnswer.question.Id}" onchange="changeValue(this, '{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}', '{!'RadioButtonQuestion' + questionAnswer.question.Id}');" />
-                            <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
-                            <apex:inputHidden value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" html-data-id="{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}" html-data-common-question="{!'RadioButtonQuestion' + questionAnswer.question.Id}" />
-                        </apex:repeat>
-                    </apex:outputPanel>
+                </div>
+                <div style="form-group card-body">
+                    <apex:outputPanel id="questionnaireQuestionAnswer">                    
+                        <apex:repeat value="{!questionAnswerList}" var="questionAnswer">
+                            <div class="form-group" style="padding:0px 20px">
+                                <div style="padding:5px 0px;">
+                                    <apex:outputfield value="{!questionAnswer.question.Order__c}"/>
+                                    -
+                                    <apex:outputfield value="{!questionAnswer.question.QuestionLabel__c}"/> 
+                                </div>
+                                
+                                <apex:outputPanel rendered="{!questionAnswer.question.QuestionType__c == 'Text'}">
+                                    <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
+                                        <apex:inputText styleClass="form-control" value="{!answerChosen[answerIndexWrapperItem.answer.Id]}"/>
+                                    </apex:repeat>
+                                </apex:outputPanel>           
 
-                    <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Select', true, false)}">
-                        <apex:actionRegion>
-                            <apex:selectList value="{!temporarySelectedValue}" size="1" multiselect="false">
-                                <apex:selectOptions value="{!questionSelectType[questionAnswer.question.Id]}" />
-                                <apex:actionSupport event="onchange" action="{!populateAnswers}" reRender="dummy">
-                                </apex:actionSupport>
-                            </apex:selectList>
-                        </apex:actionRegion>
+                                <apex:outputPanel rendered="{!questionAnswer.question.QuestionType__c == 'Checkbox'}">               
+                                    <div class="form-row">
+                                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
+                                            <div class="col-5 form-inline form-group">
+                                                <apex:inputCheckbox styleClass="form-control" value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" />
+                                                &nbsp;&nbsp;
+                                                <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
+                                            </div>
+                                        </apex:repeat>                         
+                                    </div>    
+                                </apex:outputPanel>
+                                
+                                <apex:outputPanel rendered="{!questionAnswer.question.QuestionType__c == 'Radiobutton'}">
+                                    <div class="form-row">
+                                        <apex:repeat value="{!questionAnswer.answerIndexWrapperList}" var="answerIndexWrapperItem">
+                                            <div class="col-5 form-inline form-group">
+                                                <input class="form-control" type="radio" value="true" name="{!questionAnswer.question.Id}" onchange="changeValue(this, '{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}', '{!'RadioButtonQuestion' + questionAnswer.question.Id}');" />
+                                                &nbsp;&nbsp;
+                                                <apex:outputField value="{!answerIndexWrapperItem.answer.AnswerLabel__c}" />
+                                                <apex:inputHidden value="{!answerChosen[answerIndexWrapperItem.answer.Id]}" html-data-id="{!'RadioButtonValue' + answerIndexWrapperItem.answer.Id}" html-data-common-question="{!'RadioButtonQuestion' + questionAnswer.question.Id}" />
+                                            </div>
+                                        </apex:repeat>
+                                    </div>
+                                </apex:outputPanel>
+
+                                <apex:outputPanel rendered="{!questionAnswer.question.QuestionType__c == 'Select'}">
+                                    <apex:actionRegion>
+                                        <apex:selectList styleClass="form-control" value="{!temporarySelectedValue}" size="1" multiselect="false">
+                                            <apex:selectOptions value="{!questionSelectType[questionAnswer.question.Id]}" />
+                                            <apex:actionSupport event="onchange" action="{!populateAnswers}" reRender="dummy">
+                                            </apex:actionSupport>
+                                        </apex:selectList>
+                                    </apex:actionRegion>
+                                </apex:outputPanel>
+                                    
+                                <apex:outputPanel rendered="{!questionAnswer.question.QuestionType__c == 'Star'}">
+                                    
+                                </apex:outputPanel>
+                            </div>
+                        </apex:repeat>                    
                     </apex:outputPanel>
-                        
-                    <apex:outputPanel rendered="{!IF(questionAnswer.question.QuestionType__c == 'Star', true, false)}">
-                        
-                    </apex:outputPanel>
-                </apex:repeat>
-            </apex:outputPanel>
-            <div class="form-row">
-                <apex:commandButton value="Save" action="{!saveQuestionnaireFilled}" rendered="{!IF(questionnaireId == null, false, true)}" reRender="apexPageMessages" />
+                </div>
+            </div>
+            <br/>
+            <div align="center">
+                <apex:commandButton styleClass="btn btn-success" value="Save" action="{!saveQuestionnaireFilled}" rendered="{!questionnaireId != null}" reRender="apexPageMessages" />
             </div>
         </apex:form>
 
