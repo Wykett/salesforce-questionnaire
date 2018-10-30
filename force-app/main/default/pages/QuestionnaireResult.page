@@ -1,0 +1,52 @@
+<apex:page controller="QuestionnaireResultController" docType="html-5.0" cache="false"  applyHtmlTag="true" standardStylesheets="false" showHeader="false">
+    <head>
+        <title>Fill questionnaire</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    </head>
+    <body class="bg-light" style="padding:20px">
+        <apex:pageMessages Id="apexPageMessages" />
+        <apex:form styleClass="container" id="questionnaireForm">
+            <apex:outputText rendered="{!IF(questionnaireId == null, true, false)}">
+                Choose questionnaire
+                <apex:selectList value="{!questionnaireId}"  size="1" styleClass="form-control h40px" >
+                    <apex:selectOptions value="{!questionnaireChoices}" />
+                    <apex:actionSupport event="onchange" action="{!showQuestionnaire}" reRender="tabPanel,noDataPanel" status="loading"/>
+                </apex:selectList>
+            </apex:outputText>
+        </apex:form>
+        <div class="card">
+            <div class="form-group card-header row mx-0 my-3" style="background-color:white">
+                <div class="col-12">
+                    <apex:outputField styleClass="form-control" value="{!questionnaireToShow.Name}"/>
+                </div>
+            </div>    
+            <div style="form-group card-body">
+                <apex:outputPanel id="questionnaireQuestionAnswer">
+                    <apex:repeat value="{!savedAnswerList}" var="savedAnswer">
+                        <div class="row" style="padding:15px;">
+                            <div class="form-group col-auto col-lg-auto col-xl-4 form-inline">
+                                <div class="col-12">
+                                    <apex:outputField styleClass="form-control" value="{!savedAnswer.QuestionnaireQuestion__r.QuestionLabel__c}" style="width:100%;"/>    
+                                </div>                                
+                            </div>
+                            <div class="form-group col-auto col-lg-auto col-xl-4 form-inline">
+                                <div class="col-12">
+                                    <apex:outputField styleClass="form-control" value="{!savedAnswer.QuestionnaireAnswers__r.AnswerLabel__c}" style="width:100%;"/>    
+                                </div>                                
+                            </div>
+                            <div class="form-group col-auto col-lg-auto col-xl-4 form-inline">
+                                <div class="col-12">
+                                    <apex:outputField styleClass="form-control" value="{!savedAnswer.AnswerValue__c}" style="width:100%;"/>    
+                                </div>                                
+                            </div>
+                        </div>
+                    </apex:repeat>
+                </apex:outputPanel>
+            </div>
+        </div>
+    </body>
+</apex:page>

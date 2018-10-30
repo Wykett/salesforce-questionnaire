@@ -51,7 +51,6 @@ public class FillQuestionnaireController {
                 answerToSave.add(savedAnswer);
                 PageUtility.addInfoMessageOnThePage(String.valueOf(savedAnswer));
                 System.debug('PRINT savedAnswer=' + savedAnswer);
-                
             }
         }
         Database.insert(answerToSave);
@@ -65,7 +64,7 @@ public class FillQuestionnaireController {
     public Pagereference populateAnswers() {
         if (temporarySelectedValue == '-1')
             return null;
-            
+
         String questionId = QuestionnaireUtility.findQuestionIdFromAnswerId(questionnaireAnswerList, temporarySelectedValue);
         for (QuestionnaireAnswer__c questionnaireAnswerItem : questionnaireAnswerList)
             if (questionnaireAnswerItem.QuestionnaireQuestion__c == questionId)

@@ -77,4 +77,10 @@ public class QuestionnaireUtility {
                 return answerItem.QuestionnaireQuestion__c;
         return '-1';
     }
+
+    public static List<QuestionnaireSavedAnswer__c> retrieveSavedAnswer(String questionnaireId) {
+        return [SELECT Questionnaire__c, QuestionnaireQuestion__r.QuestionLabel__c, QuestionnaireAnswers__r.AnswerLabel__c, AnswerValue__c, Customer__c
+                FROM QuestionnaireSavedAnswer__c 
+                WHERE Questionnaire__c = :questionnaireId];
+    }
 }
