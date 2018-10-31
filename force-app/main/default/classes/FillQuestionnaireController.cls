@@ -3,7 +3,7 @@ public class FillQuestionnaireController {
     public List<QuestionnaireQuestionAnswerWrapper> questionAnswerList {get; set;}
     public List<QuestionnaireAnswer__c> questionnaireAnswerList {get; set;}
     public Integer addAnswerIndex {get; set;}
-    public Id questionnaireId {get; set;}
+    public String questionnaireId {get; set;}
     public String customerId {get; set;}
     public Map<String, Object> answerChosen {get; set;}
     public Map<String, List<SelectOption>> questionSelectType {get; set;}
@@ -69,5 +69,9 @@ public class FillQuestionnaireController {
                 answerChosen.put(questionnaireAnswerItem.Id, false);
         answerChosen.put(temporarySelectedValue, true);
         return null;
+    }
+
+    public Pagereference redirectManageQuestionnaire() {
+        return PageUtility.toPage('ManageQuestionnaire');
     }
 }

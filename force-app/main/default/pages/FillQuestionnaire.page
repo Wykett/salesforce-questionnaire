@@ -16,6 +16,7 @@
                     <apex:selectOptions value="{!questionnaireChoices}" />
                     <apex:actionSupport event="onchange" action="{!showQuestionnaire}" reRender="tabPanel,noDataPanel" status="loading"/>
                 </apex:selectList>
+                <apex:commandLink value="Manage questionnaire" action="{!redirectManageQuestionnaire}"></apex:commandLink>
             </apex:outputText>
             <div class="card">
                 <div class="form-group card-header row mx-0 my-3" style="background-color:white">
