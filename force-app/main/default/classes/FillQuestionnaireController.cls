@@ -49,8 +49,6 @@ public class FillQuestionnaireController {
                 savedAnswer.AnswerValue__c = answerChosen.get(answerId).toString();
                 savedAnswer.Customer__c = customerId;
                 answerToSave.add(savedAnswer);
-                PageUtility.addInfoMessageOnThePage(String.valueOf(savedAnswer));
-                System.debug('PRINT savedAnswer=' + savedAnswer);
             }
         }
         Database.insert(answerToSave);
@@ -69,9 +67,6 @@ public class FillQuestionnaireController {
         for (QuestionnaireAnswer__c questionnaireAnswerItem : questionnaireAnswerList)
             if (questionnaireAnswerItem.QuestionnaireQuestion__c == questionId)
                 answerChosen.put(questionnaireAnswerItem.Id, false);
-
-        System.debug('PRINT temporarySelectedValue=' + temporarySelectedValue);
-        
         answerChosen.put(temporarySelectedValue, true);
         return null;
     }
